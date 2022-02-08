@@ -1,3 +1,5 @@
+const expPerDays = 60;
+
 let update = function (need, days, end) {
 	days.textContent = `还需大概${need}天`;
 	const date = new Date();
@@ -8,13 +10,13 @@ let update = function (need, days, end) {
 let update1 = function (progress, days, end) {
 	const datas = progress.textContent.split('/');
 	const curr = parseInt(datas[0]);
-	update(Math.ceil((parseInt(datas[1]) - curr) / 60), days, end);
+	update(Math.ceil((parseInt(datas[1]) - curr) / expPerDays), days, end);
 }
 
 let update2 = function (item, days, end) {
 	const idx = item.textContent.indexOf("还需要");
 	if (idx != -1) {
-		update(Math.ceil(parseInt(item.textContent.substring(idx + "还需要".length)) / 60), days, end);
+		update(Math.ceil(parseInt(item.textContent.substring(idx + "还需要".length)) / expPerDays), days, end);
 	}
 }
 
@@ -26,7 +28,7 @@ info.appendChild(days);
 info.appendChild(end);
 
 let checkProgress = function (time = 0) {
-	if (time >= 5) {
+	if (time > 10) {
 		console.error("[BilibiliDaysToLevelUp] Tried too many time.");
 		return;
 	}
@@ -53,10 +55,8 @@ let checkProgress = function (time = 0) {
 		const avatars = document.getElementsByClassName("header-avatar-wrap");
 		if (avatars && avatars.length >= 1) {
 			const observer = new MutationObserver(function (mutationList, observer) {
-				console.log("mutation detected");
 				for (const mutation of mutationList) {
 					for (const node of mutation.addedNodes) {
-						console.log(node);
 						if (node instanceof Element && node.classList.contains("is-bottom")) {
 							const levelItem = node.getElementsByClassName("level-item__text")[0];
 							levelItem.after(info);
@@ -67,7 +67,6 @@ let checkProgress = function (time = 0) {
 					}
 				}
 			});
-			console.log("observed");
 			observer.observe(avatars[0], { childList: true });
 		} else {
 			setTimeout(checkProgress, 500, time + 1);
