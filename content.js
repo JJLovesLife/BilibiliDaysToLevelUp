@@ -59,9 +59,14 @@ let checkProgress = function (time = 0) {
 					for (const node of mutation.addedNodes) {
 						if (node instanceof Element && node.classList.contains("is-bottom")) {
 							const levelItem = node.getElementsByClassName("level-item__text")[0];
-							levelItem.after(info);
 							update2(levelItem, days, end);
+							levelItem.after(info);
 							observer.disconnect();
+							
+							const observeUpdate = new MutationObserver(function () {
+								update2(levelItem, days, end);
+							});
+							observeUpdate.observe(levelItem, { childList: true });
 							return;
 						}
 					}
