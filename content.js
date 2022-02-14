@@ -78,4 +78,7 @@ let checkProgress = function (time = 0) {
 		}
 	}
 }
-checkProgress();
+
+if (location.host != "live.bilibili.com") {
+	checkProgress();
+}
